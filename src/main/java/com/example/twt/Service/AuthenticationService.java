@@ -1,9 +1,9 @@
 package com.example.twt.Service;
 
 
-import com.example.twt.Model.AuthenticationRequest;
-import com.example.twt.Model.AuthenticationResponse;
-import com.example.twt.Model.RegisterRequest;
+import com.example.twt.DTO.AuthenticationRequest;
+import com.example.twt.DTO.AuthenticationResponse;
+import com.example.twt.DTO.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

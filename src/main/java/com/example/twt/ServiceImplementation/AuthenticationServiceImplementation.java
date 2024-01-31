@@ -1,8 +1,8 @@
 package com.example.twt.ServiceImplementation;
 
-import com.example.twt.Model.AuthenticationRequest;
-import com.example.twt.Model.AuthenticationResponse;
-import com.example.twt.Model.RegisterRequest;
+import com.example.twt.DTO.AuthenticationRequest;
+import com.example.twt.DTO.AuthenticationResponse;
+import com.example.twt.DTO.RegisterRequest;
 import com.example.twt.Model.twtUser;
 import com.example.twt.Repo.twtUserRepository;
 import com.example.twt.Service.AuthenticationService;
@@ -16,6 +16,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.security.SecureRandom;
 
 @Service
 @RequiredArgsConstructor

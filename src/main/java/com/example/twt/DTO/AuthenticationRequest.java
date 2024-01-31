@@ -1,4 +1,4 @@
-package com.example.twt.Model;
+package com.example.twt.DTO;
 
 
 import lombok.AllArgsConstructor;

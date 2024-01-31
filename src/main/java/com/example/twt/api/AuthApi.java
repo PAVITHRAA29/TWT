@@ -1,9 +1,10 @@
 package com.example.twt.api;
 
 
-import com.example.twt.Model.AuthenticationRequest;
-import com.example.twt.Model.AuthenticationResponse;
-import com.example.twt.Model.RegisterRequest;
+import com.example.twt.DTO.ResetPasswordDTO;
+import com.example.twt.DTO.AuthenticationRequest;
+import com.example.twt.DTO.AuthenticationResponse;
+import com.example.twt.DTO.RegisterRequest;
 import com.example.twt.Model.twtUser;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,13 +24,13 @@ public interface AuthApi {
     public ResponseEntity<twtUser> getUserDetails(@RequestHeader("Authorization") String authorizationHeader);
 
     @GetMapping("verify/")
-    public ResponseEntity<String> verifyEmail(@RequestParam("token") String token);
+    public ResponseEntity<String> verifyEmail(@RequestHeader("Authorization") String authorizationHeader);
 
     @PostMapping("forgot-password/")
-    public ResponseEntity<String> forgotPassword(@RequestParam String email);
+    public ResponseEntity<String> forgotPassword(@RequestBody RegisterRequest registerRequest);
 
     @PostMapping("reset-password/")
-    public ResponseEntity<String> resetPassword(@RequestParam String email, @RequestParam String code, @RequestParam String newPassword);
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordDTO resetPasswordDTO);
 
 
 }

@@ -1,9 +1,10 @@
 package com.example.twt.Controller;
 
 
-import com.example.twt.Model.AuthenticationRequest;
-import com.example.twt.Model.AuthenticationResponse;
-import com.example.twt.Model.RegisterRequest;
+import com.example.twt.DTO.ResetPasswordDTO;
+import com.example.twt.DTO.AuthenticationRequest;
+import com.example.twt.DTO.AuthenticationResponse;
+import com.example.twt.DTO.RegisterRequest;
 import com.example.twt.Model.twtUser;
 import com.example.twt.Repo.twtUserRepository;
 import com.example.twt.Service.AuthenticationService;
@@ -63,22 +64,26 @@ public class AuthController implements AuthApi {
     }
 
     @Override
-    public ResponseEntity<String> verifyEmail(@RequestParam("token") String token) {
-        try {
-            String username = jwtService.extractUserName(token);
-            twtUser user = userRepository.findByUsername(username)
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+    public ResponseEntity<String> verifyEmail(@RequestHeader("Authorization") String authorizationHeader) {
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String jwtToken = authorizationHeader.substring(7);
+            try {
+                String username = jwtService.extractUserName(jwtToken);
+                twtUser user = userRepository.findByUsername(username)
+                        .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
 
-            if (jwtService.isTokenValid(token, user)) {
-                userRepository.save(user);
-                return ResponseEntity.ok("Email verified successfully!");
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+                if (jwtService.isTokenValid(jwtToken, user)) {
+                    userRepository.save(user);
+                    return ResponseEntity.ok("Email verified successfully!");
+                } else {
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error verifying email");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error verifying email");
         }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error verifying email");
     }
 
     @Override
@@ -103,8 +108,9 @@ public class AuthController implements AuthApi {
     }
 
     @Override
-    public ResponseEntity<String> forgotPassword(@RequestParam String email) {
+    public ResponseEntity<String> forgotPassword(@RequestBody RegisterRequest registerRequest) {
         try {
+            String email = registerRequest.getEmail();
             twtUser user = userRepository.findByEmail(email)
                     .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 
@@ -121,8 +127,11 @@ public class AuthController implements AuthApi {
     }
 
     @Override
-    public ResponseEntity<String> resetPassword(@RequestParam String email, @RequestParam String code, @RequestParam String newPassword) {
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordDTO resetPasswordDTO) {
         try {
+            String email = resetPasswordDTO.getEmail();
+            String code = resetPasswordDTO.getCode();
+            String newPassword = resetPasswordDTO.getNewpassword();
             twtUser user = userRepository.findByEmail(email)
                     .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 

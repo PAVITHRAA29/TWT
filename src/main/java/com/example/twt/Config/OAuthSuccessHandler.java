@@ -43,7 +43,6 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
                 .orElseThrow();
         System.out.println(email);
         if(employeeEntity==null){
-            System.out.println("hell");
             response.sendRedirect("http://localhost:8080/usernotfound");
         }
         else{

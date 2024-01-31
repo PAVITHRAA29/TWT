@@ -1,4 +1,4 @@
-package com.example.twt.Model;
+package com.example.twt.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationResponse {
+public class ResetPasswordDTO {
 
-    private String token;
-    private String refreshToken;
-
+    private String email;
+    private String code;
+    private String newpassword;
 }
