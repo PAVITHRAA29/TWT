@@ -3,6 +3,7 @@ package com.example.twt.Service;
 import com.example.twt.Model.twtUser;
 import io.jsonwebtoken.Claims;
 import lombok.Data;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -39,5 +40,8 @@ public interface JwtService {
     Date extractExpiration(String token);
 
     String getRefreshToken(twtUser twtUser);
+
+    public String refreshAccessToken(String refreshToken);
+
 
 }

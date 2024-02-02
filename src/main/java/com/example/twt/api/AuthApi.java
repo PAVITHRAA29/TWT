@@ -32,5 +32,8 @@ public interface AuthApi {
     @PostMapping("reset-password/")
     public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordDTO resetPasswordDTO);
 
+    @PostMapping("refresh-token/")
+    public ResponseEntity<?> refreshToken(@RequestHeader("Authorization") String authorizationHeader);
+
 
 }

@@ -14,6 +14,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 @Service
@@ -87,9 +88,33 @@ public class JwtServiceImplementation implements JwtService {
     }
 
     @Override
+    public String refreshAccessToken(String refreshToken) {
+        Claims claims = extractAllClaims(refreshToken);
+        Date expiration = claims.getExpiration();
+
+        if (expiration.before(new Date(System.currentTimeMillis()))) {
+            throw new RuntimeException("Refresh token has expired");
+        }
+        return generateTokenFromRefreshToken(refreshToken);
+    }
+
+
+    private String generateTokenFromRefreshToken(String refreshToken) {
+        String username = extractUserName(refreshToken);
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + (1000*60*60*24)))
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    @Override
     public boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
+
+
 
     @Override
     public Date extractExpiration(String token) {

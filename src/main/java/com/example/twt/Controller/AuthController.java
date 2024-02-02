@@ -87,6 +87,22 @@ public class AuthController implements AuthApi {
     }
 
     @Override
+    public ResponseEntity<?> refreshToken(@RequestHeader("Authorization") String authorizationHeader) {
+        try {
+            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+                String refreshToken = authorizationHeader.substring(7);
+                String newAccessToken = jwtService.refreshAccessToken(refreshToken);
+                return ResponseEntity.ok(newAccessToken);
+            } else {
+                return ResponseEntity.badRequest().body("Invalid Authorization header");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Error refreshing token");
+        }
+    }
+
+    @Override
     public ResponseEntity<twtUser> getUserDetails(@RequestHeader("Authorization") String authorizationHeader) {
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String jwtToken = authorizationHeader.substring(7);

@@ -1,6 +1,7 @@
 package com.example.twt.Config;
 
 import com.example.twt.Filter.JwtAuthenticationFilter;
+import com.example.twt.Filter.TokenRefreshFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +26,8 @@ public class SecurityConfig {
 
     private final OAuthSuccessHandler oAuthSuccessHandler;
 
+    private final TokenRefreshFilter tokenRefreshFilter;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http
@@ -38,7 +41,8 @@ public class SecurityConfig {
                 })
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationprovider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(tokenRefreshFilter, JwtAuthenticationFilter.class);
 
     return http.build();
     }
